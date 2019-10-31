@@ -24,26 +24,9 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
-
-<div class="card">
-  <img src={image url of user} />
-  <div class="card-info">
-    <h3 class="name">{users name}</h3>
-    <p class="username">{users user name}</p>
-    <p>Location: {users location}</p>
-    <p>Profile:  
-      <a href={address to users github page}>{address to users github page}</a>
-    </p>
-    <p>Followers: {users followers count}</p>
-    <p>Following: {users following count}</p>
-    <p>Bio: {users bio}</p>
-  </div>
-</div>
-
 */
 
 /* List of LS Instructors Github username's: 
@@ -53,3 +36,83 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+
+
+function profileCard(dataObj) {
+
+  // creating elements
+  const 
+  card = document.createElement('div'),
+  avatarImage = document.createElement('img'),
+  cardInfo = document.createElement('div'),
+  name = document.createElement('h3'),
+  userName = document.createElement('p'),
+  location = document.createElement('p'),
+  profile = document.createElement('p'),
+  profileUrl = document.createElement('a'),
+  followers = document.createElement('p'),
+  following = document.createElement('p'),
+  bio = document.createElement('p')
+
+  // appending children
+card.appendChild(avatarImage);
+card.appendChild(cardInfo);
+cardInfo.appendChild(name);
+cardInfo.appendChild(userName);
+cardInfo.appendChild(location);
+cardInfo.appendChild(profile);
+profile.appendChild(profileUrl);
+cardInfo.appendChild(followers);
+cardInfo.appendChild(following);
+cardInfo.appendChild(bio);
+
+  // adding content to elements
+  name.textContent = dataObj.name;
+  avatarImage.src = dataObj.avatar_url;
+  userName.textContent = dataObj.login;
+  location.textContent = `Location: ${dataObj.location}`;
+  profile.textContent = 'Profile:';
+  profileUrl.href = dataObj.html_url;
+  profileUrl.textContent = dataObj.html_url;
+  followers.textContent = `Followers: ${dataObj.followers}`;
+  following.textContent = `Following: ${dataObj.following}`;
+  bio.textContent = `Bio: ${dataObj.bio}`;
+  //adding classNames to elements
+
+ 
+  card.classList.add('card');
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  userName.classList.add('user');
+document.getElementsByClassName('container')[0].appendChild(card);
+return card;
+} 
+
+
+let userNames = ['ShandaWoods',
+  'devaneereid',
+  'thesoundfromthesky',
+  'vtillemans',
+  'itshui3',
+  'Rae-Glazier',
+]
+// get request helper function
+
+const dataFetcher = (username) => {
+  axios.get(`https://api.github.com/users/${username}`)
+  .then(response => {
+    console.log('response is: ',response);
+    profileCard(response.data);
+    return response.data
+  }).catch(error => {
+    console.log('The data was not returned', error);
+  })
+}
+// function to loop through userNames and call dataFetcher
+const createCards = (userNames) => {
+  return userNames.forEach(userName => {
+    return dataFetcher(userName)
+  })
+}
+createCards(userNames);
